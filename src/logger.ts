@@ -1,19 +1,20 @@
-const chalk = require('chalk');
+import chalk from 'chalk';
 
 import { getWinningPlan } from './explain';
+import { LoggerFunction } from './types';
 
 const log = console.log;
 
-export default function defaultLoggingFunction(
-  operation: string,
-  collectionName: string,
-  executionTimeMS: number,
-  filter: Object | null,
-  options: any,
-  update: Object | null,
-  additionalLogProperties: any,
-  explain: any
-) {
+export const defaultLoggingFunction: LoggerFunction = ({
+  operation,
+  collectionName,
+  executionTimeMS,
+  filter,
+  options,
+  update,
+  additionalLogProperties,
+  explainResult,
+}) => {
   let logProperties: any = {};
 
   if (update) {
@@ -33,8 +34,8 @@ export default function defaultLoggingFunction(
   log();
 
   log(`mongoose: ${logTimeMS(executionTimeMS)} ms ${queryString}`);
-  if (explain) {
-    const stages = getWinningPlan(explain);
+  if (explainResult) {
+    const stages = getWinningPlan(explainResult);
     const plan = logQueryExplain(stages);
     if (plan) {
       log(plan);
@@ -42,7 +43,7 @@ export default function defaultLoggingFunction(
   }
 
   log();
-}
+};
 
 function logTimeMS(executionTimeMS: number) {
   if (executionTimeMS < 100) {

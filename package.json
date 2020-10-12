@@ -19,7 +19,10 @@
     "size": "size-limit",
     "analyze": "size-limit --why"
   },
-  "peerDependencies": {},
+  "peerDependencies": {
+    "@types/mongoose": "^5.x",
+    "mongoose": "^5.x"
+  },
   "husky": {
     "hooks": {
       "pre-commit": "tsdx lint"
@@ -54,5 +57,19 @@
   },
   "dependencies": {
     "chalk": "^4.1.0"
+  },
+  "keywords": [
+    "mongoose",
+    "query",
+    "mongodb",
+    "mongo",
+    "timing",
+    "profiler",
+    "explain",
+    "plugin"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marcosfede/mongoose-query-logger.git"
   }
 }

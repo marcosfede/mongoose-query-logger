@@ -41,7 +41,7 @@ const DEFAULT_OPTIONS: QueryLoggerOptions = {
 export class MongooseQueryLogger {
   private options: QueryLoggerOptions;
 
-  constructor(options: Partial<QueryLoggerOptions>) {
+  constructor(options: Partial<QueryLoggerOptions> = {}) {
     this.options = { ...DEFAULT_OPTIONS, ...options };
   }
 

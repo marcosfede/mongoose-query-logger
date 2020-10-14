@@ -33,6 +33,9 @@ const schema = new mongoose.Schema({
 });
 
 schema.plugin(queryLogger, { explain: true });
+
+// compile the model AFTER registering plugins
+const User = mongoose.model('User', schema);
 ```
 
 ## custom logging function

@@ -1,20 +1,22 @@
 import chalk from 'chalk';
 
 import { getWinningPlan } from './explain';
-import { LoggerFunction } from './types';
+import { ExplainLoggerArgs, QueryLoggerArgs } from './types';
+import { isEmpty } from './utils';
 
-const log = console.log;
-
-export const defaultLoggingFunction: LoggerFunction = ({
-  operation,
-  collectionName,
-  executionTimeMS,
-  filter,
-  options,
-  update,
-  additionalLogProperties,
-  explainResult,
-}) => {
+export const defaultQueryLogger = (
+  {
+    operation,
+    collectionName,
+    executionTimeMS,
+    filter,
+    fields,
+    options,
+    update,
+    additionalLogProperties,
+  }: QueryLoggerArgs,
+  logger = console.log
+) => {
   let logProperties: any = {};
 
   if (update) {
@@ -27,22 +29,27 @@ export const defaultLoggingFunction: LoggerFunction = ({
       : { additionalLogProperties };
   }
 
-  const queryString = `${collectionName}.${operation}(${JSON.stringify(
-    filter
-  )}${options ? ', ' + JSON.stringify(options) : ''})`;
+  const otherArgs = [update, fields, options]
+    .map(x => (x && !isEmpty(x) ? JSON.stringify(x) : null))
+    .filter(x => x);
+  const queryArgs = [JSON.stringify(filter)].concat(otherArgs).join(', ');
 
-  log();
+  const queryString = `${collectionName}.${operation}(${queryArgs})`;
 
-  log(`mongoose: ${logTimeMS(executionTimeMS)} ms ${queryString}`);
+  logger(`mongoose: ${logTimeMS(executionTimeMS)} ms ${queryString}`);
+};
+
+export const defaultExplainLogger = (
+  { explainResult }: ExplainLoggerArgs,
+  logger = console.log
+) => {
   if (explainResult) {
     const stages = getWinningPlan(explainResult);
     const plan = logQueryExplain(stages);
     if (plan) {
-      log(plan);
+      logger(plan);
     }
   }
-
-  log();
 };
 
 function logTimeMS(executionTimeMS: number) {

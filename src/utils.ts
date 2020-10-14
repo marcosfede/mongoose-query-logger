@@ -13,3 +13,13 @@ export function omit(obj: Object, props: string[]) {
   });
   return newObj;
 }
+
+export function isEmpty(obj: Object): boolean {
+  return Object.keys(obj).length === 0 && obj.constructor === Object;
+}
+
+export function assert(condition: boolean, msg = 'assertion failed') {
+  if (!condition) {
+    throw new Error(msg);
+  }
+}

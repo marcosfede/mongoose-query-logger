@@ -115,4 +115,12 @@ describe('MongooseQueryLogger', () => {
       'tasks.find({}, {"limit":10,"skip":5})'
     );
   });
+
+  it('works for aggregate', async () => {
+    const result = await Task.aggregate([{ $match: { name: 'john' } }]);
+    const expected = 'tasks.aggregate([{"$match":{"name":"john"}}])';
+    expect(logger.mock.calls[logger.mock.calls.length - 1][0]).toContain(
+      expected
+    );
+  });
 });

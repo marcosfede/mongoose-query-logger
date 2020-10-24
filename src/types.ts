@@ -25,6 +25,7 @@ export interface ExplainLoggerArgs {
 }
 export type ExplainLogger = (result: ExplainLoggerArgs) => void;
 
+// all middlewares enabled by default
 export const TARGET_METHODS = [
   'count',
   'countDocuments',
@@ -39,19 +40,47 @@ export const TARGET_METHODS = [
   'updateMany',
   'deleteOne',
   'deleteMany',
-  // 'aggregate',
   // 'remove', # note https://mongoosejs.com/docs/middleware.html#aggregate
   // insertMany,
+  'aggregate',
 ];
 export type TargetMethod = ValuesOf<typeof TARGET_METHODS>;
 
+// query middlewares
+export const QUERY_MIDDLEWARE = [
+  'find',
+  'findOne',
+  'findOneAndUpdate',
+  'findOneAndRemove',
+  'findOneAndDelete',
+  'update',
+  'updateOne',
+  'updateMany',
+  'deleteOne',
+  'deleteMany',
+];
+export type QueryMiddleware = ValuesOf<typeof QUERY_MIDDLEWARE>;
+
+// aggregate middleware is handled differently...
+export const AGGREGATE_MIDDLEWARE = ['aggregate'];
+export type AggregateMiddleware = 'aggregate';
+
+// count middleware is handled differently...
+export const COUNT_MIDDLEWARE = [
+  'count',
+  'countDocuments',
+  'estimatedDocumentCount',
+];
+export type CountMiddleware = ValuesOf<typeof COUNT_MIDDLEWARE>;
+
+// explain middleware enabled by default
 export const EXPLAIN_METHODS = [
   'find',
   'findOne',
   // 'count',
   // 'countDocuments',
   // 'estimatedDocumentCount',
-  // 'aggregate',
+  'aggregate',
 ];
 export type ExplainMethod = ValuesOf<typeof EXPLAIN_METHODS>;
 

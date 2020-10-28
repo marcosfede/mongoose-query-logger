@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { MongooseQueryLogger } from '../src/index';
 
-mongoose.set('debug', (...args) => console.dir(args));
+// mongoose.set('debug', (...args) => console.dir(args));
 export const queryLogger = new MongooseQueryLogger();
 
 const MONGO_URI = 'mongodb://localhost/mongoose-query-logger';

@@ -1,4 +1,5 @@
 export type $FIXME = any;
+export type QueryPlanner = any;
 
 class NativeError extends global.Error {}
 
@@ -21,7 +22,7 @@ export interface QueryLoggerArgs {
 export type QueryLogger = (args: QueryLoggerArgs) => void;
 
 export interface ExplainLoggerArgs {
-  explainResult: $FIXME;
+  queryPlanners: QueryPlanner[];
 }
 export type ExplainLogger = (result: ExplainLoggerArgs) => void;
 

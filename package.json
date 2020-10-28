@@ -48,15 +48,18 @@
   },
   "devDependencies": {
     "@size-limit/preset-small-lib": "^4.6.0",
+    "@types/mongoose": "^5.7.36",
     "husky": "^4.3.0",
+    "mongoose": "^5.10.11",
     "size-limit": "^4.6.0",
     "tsdx": "^0.14.0",
     "tslib": "^2.0.1",
-    "typescript": "^4.0.3"
+    "typescript": "^4.0.3",
+    "wait-for-expect": "^3.0.2"
   },
   "peerDependencies": {
-    "@types/mongoose": "^5.x",
-    "mongoose": "^5.x"
+    "@types/mongoose": "^5.7.36",
+    "mongoose": "^5.10.11"
   },
   "keywords": [
     "mongoose",

@@ -23,3 +23,15 @@ export function assert(condition: boolean, msg = 'assertion failed') {
     throw new Error(msg);
   }
 }
+
+export function findPropRecursively(obj: Object, prop: string) {
+  const keys = Object.keys(obj);
+  for (let key of keys) {
+    if (key === prop) {
+      return obj[key];
+    }
+    if (obj[key] && typeof obj[key] === 'object') {
+      return findPropRecursively(obj[key], prop);
+    }
+  }
+}

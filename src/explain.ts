@@ -1,17 +1,13 @@
-import { omit } from './utils';
+import { QueryPlanner } from './types';
+import { omit, findPropRecursively } from './utils';
 
-export function getWinningPlan(result: any) {
-  if (!result) {
-    debugger;
-    return null;
-  }
-  result = Array.isArray(result) ? result[0] : result;
-  if (!result.queryPlanner || !result.queryPlanner.winningPlan) {
-    debugger;
+export function getWinningPlan(queryPlanner: any) {
+  if (!queryPlanner || !queryPlanner.winningPlan) {
+    console.error('no queryPlanner');
     return null;
   }
 
-  const winningPlan = result.queryPlanner.winningPlan;
+  const winningPlan = queryPlanner.winningPlan;
   const stages = [];
 
   let currentStage = winningPlan;
@@ -24,4 +20,17 @@ export function getWinningPlan(result: any) {
   stages.reverse();
 
   return stages;
+}
+
+export function findQueryPlanners(stages: QueryPlanner[]) {
+  const planners = [];
+
+  stages.forEach(stage => {
+    const plan = findPropRecursively(stage, 'queryPlanner');
+    if (plan) {
+      planners.push(plan);
+    }
+  });
+
+  return planners;
 }

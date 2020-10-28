@@ -40,16 +40,16 @@ export const defaultQueryLogger = (
 };
 
 export const defaultExplainLogger = (
-  { explainResult }: ExplainLoggerArgs,
+  { queryPlanners }: ExplainLoggerArgs,
   logger = console.log
 ) => {
-  if (explainResult) {
-    const stages = getWinningPlan(explainResult);
+  queryPlanners.forEach(queryPlanner => {
+    const stages = getWinningPlan(queryPlanner);
     const plan = logQueryExplain(stages);
     if (plan) {
       logger(plan);
     }
-  }
+  });
 };
 
 function logTimeMS(executionTimeMS: number) {

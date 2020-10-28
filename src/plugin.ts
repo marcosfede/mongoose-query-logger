@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { findQueryPlanners } from './explain';
 
 import { defaultQueryLogger, defaultExplainLogger } from './logger';
 import {
@@ -79,7 +80,7 @@ export class MongooseQueryLogger {
 
     return function(this) {
       try {
-        // assert(this instanceof mongoose.Query, 'this is not mongoose.Query');
+        assert(this instanceof mongoose.Query, 'this is not mongoose.Query');
         assert(this.__startTime !== null, 'startTime was null');
         assert(this._collection, 'no this._collection');
 
@@ -93,12 +94,12 @@ export class MongooseQueryLogger {
           update: this._update,
           additionalLogProperties: this.__additionalProperties,
         };
-        instance.options.queryLogger(baseArgs);
 
         if (
           instance.options.explain &&
           instance.options.explainMethods.includes(this.op)
         ) {
+          // execute the same query but with explain: true
           this._collection[this.op](
             this._conditions,
             {
@@ -106,16 +107,23 @@ export class MongooseQueryLogger {
               ...this.options,
             },
             (error, result) => {
-              if (error) {
-                // TODO: remove
-                console.error('error: ', error);
+              assert(!error && !!result, 'error running explain');
+
+              if (!Array.isArray(result)) {
+                result = [result];
               }
+              const plans = findQueryPlanners(result);
+              assert(plans.length !== 0, 'no plans found');
+
+              instance.options.queryLogger(baseArgs);
               instance.options.explainLogger({
                 ...baseArgs,
-                explainResult: error ? null : result,
+                queryPlanners: plans,
               });
             }
           );
+        } else {
+          instance.options.queryLogger(baseArgs);
         }
         // prevent this middleware from stopping the middleware chain
       } catch (e) {
@@ -127,9 +135,12 @@ export class MongooseQueryLogger {
   private getPostAggregateHook(): QueryHook {
     const instance = this;
 
-    return function(this) {
+    return async function(this) {
       try {
-        // assert(this instanceof mongoose.Query, 'this is not mongoose.Query');
+        assert(
+          this instanceof mongoose.Aggregate,
+          'this is not mongoose.Query'
+        );
         assert(this.__startTime !== null, 'startTime was null');
         assert(this._model, 'no this._model');
 
@@ -143,29 +154,31 @@ export class MongooseQueryLogger {
           update: {},
           additionalLogProperties: this.__additionalProperties,
         };
-        instance.options.queryLogger(baseArgs);
 
         if (
           instance.options.explain &&
           instance.options.explainMethods.includes('aggregate') &&
           !this.options?.explain
         ) {
-          this._model.collection.collection.aggregate(
-            this._pipeline,
-            { ...this.options, explain: true },
-            (error, cursor) => {
-              if (error) {
-                // TODO: remove
-                console.error('error: ', error);
-              }
-              cursor.next().then(result => {
-                instance.options.explainLogger({
-                  ...baseArgs,
-                  explainResult: error ? null : result.stages[0]['$cursor'],
-                });
-              });
-            }
+          const result = await this._model.collection.collection
+            .aggregate(this._pipeline, { ...this.options, explain: true })
+            .toArray();
+
+          assert(
+            Array.isArray(result) && result.length > 0,
+            'no aggregate explain'
           );
+
+          const plans = findQueryPlanners(result);
+          assert(plans.length !== 0, 'no plans found');
+
+          instance.options.queryLogger(baseArgs);
+          instance.options.explainLogger({
+            ...baseArgs,
+            queryPlanners: plans,
+          });
+        } else {
+          instance.options.queryLogger(baseArgs);
         }
         // prevent this middleware from stopping the middleware chain
       } catch (e) {

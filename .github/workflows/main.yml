@@ -9,6 +9,7 @@ jobs:
       matrix:
         node: ['10.x', '12.x', '14.x']
         os: [ubuntu-latest, windows-latest, macOS-latest]
+        mongodb-version: [4.2]
 
     steps:
       - name: Checkout repo
@@ -18,6 +19,11 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node }}
+
+      - name: Start MongoDB
+        uses: supercharge/mongodb-github-action@1.3.0
+        with:
+          mongodb-version: ${{ matrix.mongodb-version }}
 
       - name: Install deps and build (with cache)
         uses: bahmutov/npm-install@v1

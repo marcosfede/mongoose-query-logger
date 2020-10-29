@@ -57,13 +57,13 @@ schema.plugin(queryLogger.getPlugin());
 const User = mongoose.model('User', schema);
 ```
 
-## turning on explain logging
+## Explain logging
 This is turned of by default since it adds overhead to your server. It will fire an explain query for supported operations
 Turn this on by calling: 
 
 ```plugin.setExplain(true)```
 
-## supported query logging methods
+## Supported query logging methods
 The following methods are supported for query logging
 
 | method | supported |
@@ -93,7 +93,7 @@ If you want only a subset of these to be logged, you can provide an array of sup
 plugin.setQueryMethods({targetMethods: ['find', 'aggregate']})
 ```
 
-## supported explain logging methods
+## Supported explain logging methods
 The following methods are supported for query explaining
 
 | method | supported |
@@ -108,7 +108,7 @@ If you want only a subset of these to be logged, you can provide an array of sup
 plugin.setQueryMethods({explainMethods: ['find', 'aggregate']})
 ```
 
-## custom query logger
+## Custom query logger
 You can provide a custom logging function by calling `plugin.setQueryLogger(myCustomLogger)`
 The logger should be a function that accepts a single argument of type object with the following keys:
 
@@ -124,7 +124,7 @@ The logger should be a function that accepts a single argument of type object wi
 | additionalLogProperties | any | additional log options |  |
 
 
-## custom explain logger
+## Custom explain logger
 You can provide a custom explain logging function by calling `plugin.setExplainLogger(myCustomExplainLogger)`
 The logger should be a function that accepts a single argument of type object with the following keys:
 
@@ -132,7 +132,7 @@ The logger should be a function that accepts a single argument of type object wi
 | --------------- | --------------- | --------------- |
 | queryPlanners | any[] | array of query execution plans as returned from mongodb |
 
-## additional log properties
+## Additional log properties
 You can include additional metadata in your queries by turning this on with 
 
 ```plugin.setAdditionalLogProperties(true)```

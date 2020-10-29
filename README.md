@@ -6,7 +6,7 @@
 ![license](https://badgen.net/npm/license/mongoose-query-logger)
 ![bundlephobia](https://badgen.net/bundlephobia/min/react)
 
-This middleware logs all your mongoose queries and execution timings.
+Mongoose middleware to log your mongoose queries and execution timings.
 
 Optionally, it also logs index usage and warns you about full collection scans
 

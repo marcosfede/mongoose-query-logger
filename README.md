@@ -2,10 +2,11 @@
 
 ![CI](https://github.com/marcosfede/mongoose-query-logger/workflows/CI/badge.svg) [![npm version](https://badge.fury.io/js/mongoose-query-logger.svg)](https://www.npmjs.com/package/mongoose-query-logger)
 
-This middleware logs to console (by default) all your mongoose queries and execution timings.
-It also logs index usage and warns you about full collection scans
+This middleware logs all your mongoose queries and execution timings.
 
-warning: don't use `{explain: true}` in production, it will run each query twice.
+Optionally, it also logs index usage and warns you about full collection scans
+
+warning: don't use `explain` in production, it will run each query twice.
 
 ## Installation
 
@@ -18,27 +19,126 @@ npm install --save-dev mongoose-query-logger
 Apply the plugin to all schemas:
 
 ```typescript
-import { queryLogger } from 'mongoose-query-logger';
+import { MongooseQueryLogger } from 'mongoose-query-logger';
 
-mongoose.plugin(queryLogger, { explain: true });
+export const queryLogger = new MongooseQueryLogger();
+ 
+// optionally add custom configuration eg:
+// queryLogger
+//    .setExplain(true)
+//    .setAdditionalLogProperties(true)
+//    .setQueryLogger(myCustomQueryLogger)
+//    .setExplainLogger(myCustomExplainLogger);
+
+mongoose.plugin(queryLogger.getPlugin());
 ```
 
 Apply the plugin to specific schemas:
 
 ```typescript
-import { queryLogger } from 'mongoose-query-logger';
+import { MongooseQueryLogger } from 'mongoose-query-logger';
+
+export const queryLogger = new MongooseQueryLogger();
+
+// optionally add custom configuration eg:
+// queryLogger
+//    .setExplain(true)
+//    .setAdditionalLogProperties(true)
+//    .setQueryLogger(myCustomQueryLogger)
+//    .setExplainLogger(myCustomExplainLogger);
 
 const schema = new mongoose.Schema({
   /* schema definition */
 });
 
-schema.plugin(queryLogger, { explain: true });
+schema.plugin(queryLogger.getPlugin());
 
 // compile the model AFTER registering plugins
 const User = mongoose.model('User', schema);
 ```
 
-## custom logging function
+## turning on explain logging
+This is turned of by default since it adds overhead to your server. It will fire an explain query for supported operations
+Turn this on by calling: 
+
+```plugin.setExplain(true)```
+
+## supported query logging methods
+The following methods are supported for query logging
+
+| method | supported |
+| --------------- | --------------- |
+| count | :heavy_check_mark: |
+| countDocuments | :heavy_check_mark: |
+| estimatedDocumentCount | :heavy_check_mark: |
+| find | :heavy_check_mark: |
+| findOne | :heavy_check_mark: |
+| findOneAndUpdate | :heavy_check_mark: |
+| findOneAndRemove | :heavy_check_mark: |
+| findOneAndDelete | :heavy_check_mark: |
+| findOneAndRemove | :heavy_check_mark: |
+| update | :heavy_check_mark: |
+| updateOne | :heavy_check_mark: |
+| updateMany | :heavy_check_mark: |
+| deleteOne | :heavy_check_mark: |
+| deleteMany | :heavy_check_mark: |
+| aggregate | :heavy_check_mark: |
+| remove |  |
+| insertMany |  |
+| distinct |  |
+
+If you want only a subset of these to be logged, you can provide an array of supported methods like so:
+
+```
+plugin.setQueryMethods({targetMethods: ['find', 'aggregate']})
+```
+
+## supported explain logging methods
+The following methods are supported for query explaining
+
+| method | supported |
+| --------------- | --------------- |
+| find | :heavy_check_mark: |
+| findOne | :heavy_check_mark: |
+| aggregate | :heavy_check_mark: |
+
+If you want only a subset of these to be logged, you can provide an array of supported methods like so:
+
+```
+plugin.setQueryMethods({explainMethods: ['find', 'aggregate']})
+```
+
+## custom query logger
+You can provide a custom logging function by calling `plugin.setQueryLogger(myCustomLogger)`
+The logger should be a function that accepts a single argument of type object with the following keys:
+
+| key | type | description | example |
+| --------------- | --------------- | --------------- | --------------- |
+| operation | string | executed operation | find, aggregate |
+| collectionName | string | collection name | tasks |
+| executionTimeMS | number | query execution time in ms | 320ms |
+| filter | Object or null  | filter object provided to the query | {"name": "john"} |
+| fields | Object or null | projection fields | {"name": 1} |
+| options | any | query options | {"sort": "name"} |
+| update | Object or null |  |  |
+| additionalLogProperties | any | additional log options |  |
+
+
+## custom explain logger
+You can provide a custom explain logging function by calling `plugin.setExplainLogger(myCustomExplainLogger)`
+The logger should be a function that accepts a single argument of type object with the following keys:
+
+| key | type | description |
+| --------------- | --------------- | --------------- |
+| queryPlanners | any[] | array of query execution plans as returned from mongodb |
+
+## additional log properties
+You can include additional metadata in your queries by turning this on with 
+
+```plugin.setAdditionalLogProperties(true)```
+
+and using it like `await User.find({"name": "john"}).additionalLogProperties('something')`
+
 
 ## License
 

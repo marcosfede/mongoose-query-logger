@@ -80,7 +80,6 @@ export class MongooseQueryLogger {
 
     return function(this) {
       try {
-        assert(this instanceof mongoose.Query, 'this is not mongoose.Query');
         assert(this.__startTime !== null, 'startTime was null');
         assert(this._collection, 'no this._collection');
 
@@ -137,10 +136,6 @@ export class MongooseQueryLogger {
 
     return async function(this) {
       try {
-        assert(
-          this instanceof mongoose.Aggregate,
-          'this is not mongoose.Query'
-        );
         assert(this.__startTime !== null, 'startTime was null');
         assert(this._model, 'no this._model');
 

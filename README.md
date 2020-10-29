@@ -153,6 +153,9 @@ You can include additional metadata in your queries by turning this on with
 
 and using it like `await User.find({"name": "john"}).additionalLogProperties('something')`
 
+## Supported versions
+
+This was tested under mongoose 4.4 and node.js >= 12
 
 ## License
 

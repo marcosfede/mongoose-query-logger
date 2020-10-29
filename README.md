@@ -6,8 +6,6 @@ This middleware logs all your mongoose queries and execution timings.
 
 Optionally, it also logs index usage and warns you about full collection scans
 
-warning: don't use `explain` in production, it will run each query twice.
-
 ## Installation
 
 ```
@@ -58,10 +56,13 @@ const User = mongoose.model('User', schema);
 ```
 
 ## Explain logging
-This is turned of by default since it adds overhead to your server. It will fire an explain query for supported operations
+
+This is turned off by default. It will fire an explain query for supported operations.
 Turn this on by calling: 
 
 ```plugin.setExplain(true)```
+
+warning: don't use `explain` in production, it will run each query twice.
 
 ## Supported query logging methods
 The following methods are supported for query logging

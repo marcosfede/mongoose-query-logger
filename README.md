@@ -1,6 +1,6 @@
 # Mongoose Query Logger
 
-[![build](https://github.com/marcosfede/mongoose-query-logger/workflows/build/badge.svg)](https://github.com/marcosfede/mongoose-query-logger/actions) [![npm version](https://badge.fury.io/js/mongoose-query-logger.svg)](https://www.npmjs.com/package/mongoose-query-logger)
+![CI](https://github.com/marcosfede/mongoose-query-logger/workflows/CI/badge.svg) [![npm version](https://badge.fury.io/js/mongoose-query-logger.svg)](https://www.npmjs.com/package/mongoose-query-logger)
 
 This middleware logs to console (by default) all your mongoose queries and execution timings.
 It also logs index usage and warns you about full collection scans

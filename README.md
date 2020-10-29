@@ -1,6 +1,10 @@
 # Mongoose Query Logger
 
-![CI](https://github.com/marcosfede/mongoose-query-logger/workflows/CI/badge.svg) [![npm version](https://badge.fury.io/js/mongoose-query-logger.svg)](https://www.npmjs.com/package/mongoose-query-logger)
+![CI](https://github.com/marcosfede/mongoose-query-logger/workflows/CI/badge.svg) 
+![npm version](https://badgen.net/npm/v/mongoose-query-logger)
+![types](https://badgen.net/npm/types/mongoose-query-logger)
+![license](https://badgen.net/npm/license/mongoose-query-logger)
+![bundlephobia](https://badgen.net/bundlephobia/min/react)
 
 This middleware logs all your mongoose queries and execution timings.
 

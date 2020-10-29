@@ -28,6 +28,11 @@ describe('MongooseQueryLogger', () => {
     await Task.create({ _id: objectid1 });
   });
 
+  beforeEach(() => {
+    logger.mockClear();
+    explainLogger.mockClear();
+  });
+
   describe('test query logger', () => {
     it('logs for query middleware', async () => {
       const examples = [

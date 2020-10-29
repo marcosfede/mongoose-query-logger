@@ -10,6 +10,15 @@ This middleware logs all your mongoose queries and execution timings.
 
 Optionally, it also logs index usage and warns you about full collection scans
 
+## Screenshots
+### Query logging and execution timing
+![Query](img/query.png)
+
+### Query Explain
+![Collscan](img/collscan.png)
+![IXScan](img/ixscan.png)
+
+
 ## Installation
 
 ```

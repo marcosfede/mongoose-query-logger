@@ -189,6 +189,14 @@ describe('MongooseQueryLogger', () => {
       await expectToContain(explainLogger, expected);
     });
 
+    it('works with findOne', async () => {
+      const tasks = Task.findOne({ name: 'john' }).exec();
+
+      const expected = 'IXSCAN {"name":1}';
+
+      await expectToContain(explainLogger, expected);
+    });
+
     it('limit and skip', async () => {
       const result = await Task.find({})
         .limit(10)

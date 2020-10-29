@@ -16,10 +16,12 @@ beforeAll(async () => {
   }
 });
 
-afterAll(async () => {
+afterAll(async done => {
   // wait for all logs to be done before ending tests
   await new Promise(r => setTimeout(r, 1000));
   mongoose.connection.db.dropDatabase(function(err, result) {});
+  mongoose.connection.close();
+  done();
 });
 
 const taskSchema = new mongoose.Schema({

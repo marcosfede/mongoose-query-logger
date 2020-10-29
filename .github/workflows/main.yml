@@ -8,7 +8,8 @@ jobs:
     strategy:
       matrix:
         node: ['10.x', '12.x', '14.x']
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+        # os: [ubuntu-latest, windows-latest, macOS-latest]
+        os: [ubuntu-latest] # mongodb action only works on linux atm
         mongodb-version: [4.2]
 
     steps:

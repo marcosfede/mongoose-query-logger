@@ -4,6 +4,22 @@ import { getWinningPlan } from './explain';
 import { ExplainLoggerArgs, QueryLoggerArgs } from './types';
 import { isEmpty } from './utils';
 
+const SERIALIZE_ARRAY_MAX_LEN = 100;
+
+// cut extremely long arrays in query serialization
+function arrayMaxLengthReplacer(key: string, value: any) {
+  if (Array.isArray(value) && value.length > SERIALIZE_ARRAY_MAX_LEN) {
+    return value
+      .slice(0, SERIALIZE_ARRAY_MAX_LEN)
+      .concat(`${value.length - SERIALIZE_ARRAY_MAX_LEN} more items...`);
+  }
+  return value;
+}
+
+function stringify(obj: any, space?: string | number) {
+  return JSON.stringify(obj, arrayMaxLengthReplacer, space);
+}
+
 export const defaultQueryLogger = (
   {
     operation,
@@ -30,9 +46,9 @@ export const defaultQueryLogger = (
   }
 
   const otherArgs = [update, fields, options]
-    .map(x => (x && !isEmpty(x) ? JSON.stringify(x) : null))
+    .map(x => (x && !isEmpty(x) ? stringify(x) : null))
     .filter(x => x);
-  const queryArgs = [JSON.stringify(filter)].concat(otherArgs).join(', ');
+  const queryArgs = [stringify(filter)].concat(otherArgs).join(', ');
 
   const queryString = `${collectionName}.${operation}(${queryArgs})`;
 
@@ -74,12 +90,12 @@ function logQueryExplain(stages): string | null {
   }
 
   if (firstStage.stage === 'IXSCAN') {
-    return chalk.green(`IXSCAN ${JSON.stringify(firstStage.keyPattern)}`);
+    return chalk.green(`IXSCAN ${stringify(firstStage.keyPattern)}`);
   }
 
   if (firstStage.stage === 'COLLSCAN') {
-    return chalk.red(`COLLSCAN: ${JSON.stringify(stages, undefined, 4)}`);
+    return chalk.red(`COLLSCAN: ${stringify(stages, 4)}`);
   }
 
-  return chalk.yellow(`Stages: ${JSON.stringify(stages, undefined, 4)}`);
+  return chalk.yellow(`Stages: ${stringify(stages, 4)}`);
 }

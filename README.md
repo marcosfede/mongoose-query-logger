@@ -4,7 +4,7 @@
 ![npm version](https://badgen.net/npm/v/mongoose-query-logger)
 ![types](https://badgen.net/npm/types/mongoose-query-logger)
 ![license](https://badgen.net/npm/license/mongoose-query-logger)
-![bundlephobia](https://badgen.net/bundlephobia/min/react)
+![bundlephobia](https://badgen.net/bundlephobia/min/mongoose-query-logger)
 
 Mongoose middleware to log your mongoose queries and execution timings.
 
